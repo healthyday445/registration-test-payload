@@ -1,6 +1,6 @@
 export async function handler(event) {
   console.log(`[register] Triggered via ${event.httpMethod}`);
-  
+
   if (event.body) {
     let payload;
     try {
