@@ -25,7 +25,7 @@ const Header = () => {
           <a href="https://healthyday.co.in/" className="text-healthyday-navy font-medium text-sm hover:text-healthyday-orange transition-colors">
             HOME
           </a>
-          <a href="https://healthyday.co.in/pricing/" className="text-healthyday-orange font-medium text-sm">
+          <a href="https://yoga.healthyday.co.in/pricing" className="text-healthyday-orange font-medium text-sm">
             PRICING
           </a>
           <a href="https://yoga.healthyday.co.in/" className="text-healthyday-navy font-medium text-sm hover:text-healthyday-orange transition-colors">

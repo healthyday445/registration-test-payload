@@ -36,7 +36,7 @@ const TwentyOneDaysHeader = () => {
 
                     <div className="flex flex-col items-center space-y-6 text-[17px] font-semibold text-[#202020] uppercase tracking-wide">
                         <a href="https://healthyday.co.in" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">HOME</a>
-                        <a href="https://healthyday.co.in/pricing/" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">PRICING</a>
+                        <a href="https://yoga.healthyday.co.in/pricing" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">PRICING</a>
                         <a href="https://yoga.healthyday.co.in/" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">FREE PROGRAMMES</a>
                         <a href="https://healthyday.co.in/contact-us/" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">CONTACT US</a>
                         <a href="https://yoga.healthyday.co.in/" onClick={() => setIsMenuOpen(false)}>
