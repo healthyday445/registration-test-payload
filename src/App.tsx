@@ -46,7 +46,7 @@ const App = () => {
     <Router>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/" element={<FreeProgrammes />} />
+          <Route path="/" element={<Renew />} />
           <Route path="/English" element={<FreeProgrammes defaultLanguage="English" />} />
           <Route path="/english" element={<FreeProgrammes defaultLanguage="English" />} />
           <Route path="/englis" element={<FreeProgrammes defaultLanguage="English" />} />
