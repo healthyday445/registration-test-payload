@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const SharedHeader = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const location = useLocation();
+    const isUSDFlow = location.pathname.includes('usd');
+    const pricingRoute = isUSDFlow ? '/usd-pricing' : '/pricing';
 
     return (
         <header className="absolute top-0 left-0 right-0 bg-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] z-50 h-[80px]">
@@ -27,7 +30,7 @@ const SharedHeader = () => {
 
                 <nav className="hidden md:flex items-center space-x-12 text-[15px] font-semibold text-[#202020] tracking-wide uppercase">
                     <a href="https://healthyday.co.in" className="hover:text-[#ffb129] transition-colors">HOME</a>
-                    <a href="https://healthyday.co.in/pricing/" className="hover:text-[#ffb129] transition-colors">PRICING</a>
+                    <Link to={pricingRoute} className="hover:text-[#ffb129] transition-colors">PRICING</Link>
                     <a href="https://yoga.healthyday.co.in/" className="hover:text-[#ffb129] transition-colors">FREE PROGRAMMES</a>
                     <a href="https://healthyday.co.in/contact-us/" className="hover:text-[#ffb129] transition-colors">CONTACT US</a>
                 </nav>
@@ -57,7 +60,7 @@ const SharedHeader = () => {
 
                         <div className="flex flex-col items-center space-y-6 text-[17px] font-semibold text-[#202020] uppercase tracking-wide">
                             <a href="https://healthyday.co.in" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">HOME</a>
-                            <a href="https://healthyday.co.in/pricing/" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">PRICING</a>
+                            <Link to={pricingRoute} onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">PRICING</Link>
                             <a href="https://yoga.healthyday.co.in/" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">FREE PROGRAMMES</a>
                             <a href="https://healthyday.co.in/contact-us/" onClick={() => setIsMenuOpen(false)} className="hover:text-[#ffb129] transition-colors">CONTACT US</a>
                             <a href="https://yoga.healthyday.co.in/" onClick={() => setIsMenuOpen(false)}>

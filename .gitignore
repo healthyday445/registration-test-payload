@@ -27,3 +27,5 @@ dist-ssr
 
 /.ignored_files
 /.claude
+# Local Netlify folder
+.netlify

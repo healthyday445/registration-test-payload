@@ -201,7 +201,7 @@ const PhoneInputCustom: React.FC<PhoneInputCustomProps> = ({
                     onFocus={onFocus}
                     placeholder={placeholder}
                     required={required}
-                    className="flex-1 h-full border-none outline-none text-[15px] text-[#4a4a4a] placeholder:text-[#999] bg-transparent"
+                    className="flex-1 h-full border-none outline-none text-[16px] text-[#4a4a4a] placeholder:text-[#999] bg-transparent"
                 />
             </div>
 
@@ -216,7 +216,7 @@ const PhoneInputCustom: React.FC<PhoneInputCustomProps> = ({
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             placeholder="Search country..."
-                            className="w-full px-3 py-1.5 text-[14px] border border-[#D5D5D5] rounded outline-none focus:border-[#0D468B]"
+                            className="w-full px-3 py-1.5 text-[16px] border border-[#D5D5D5] rounded outline-none focus:border-[#0D468B]"
                         />
                     </div>
 

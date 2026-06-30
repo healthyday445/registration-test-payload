@@ -15,7 +15,9 @@ const plans = [
         discountPrice: "1999",
         discount: "Save 66%!",
         isBestValue: true,
-        buttonText: "RENEW NOW"
+        buttonText: "RENEW NOW",
+        inrPlanName: "12m_renew_inr",
+        usdPlanName: "12m_renew_usd"
     },
     {
         title: "6 Months Plan",
@@ -23,7 +25,9 @@ const plans = [
         discountPrice: "1499",
         discount: "Save 50%!",
         isBestValue: false,
-        buttonText: "RENEW NOW"
+        buttonText: "RENEW NOW",
+        inrPlanName: "6m_renew_inr",
+        usdPlanName: "6m_renew_usd"
     },
     {
         title: "3 Months Plan",
@@ -31,7 +35,9 @@ const plans = [
         discountPrice: "999",
         discount: "Save 33%!",
         isBestValue: false,
-        buttonText: "RENEW NOW"
+        buttonText: "RENEW NOW",
+        inrPlanName: "3m_renew_inr",
+        usdPlanName: "3m_renew_usd"
     }
 ];
 
@@ -50,7 +56,12 @@ const Renew = () => {
             else if (planParam.includes('3month')) selectedPlan = plans[2];
 
             if (selectedPlan) {
-                navigate('/checkout', { state: { plan: selectedPlan }, replace: true });
+                let path = '/checkout';
+                if (selectedPlan.title.includes('1 Year')) path = '/renew/12m';
+                else if (selectedPlan.title.includes('6 Months')) path = '/renew/6m';
+                else if (selectedPlan.title.includes('3 Months')) path = '/renew/3m';
+
+                navigate(path, { state: { plan: selectedPlan }, replace: true });
             }
         }
     }, [planType, navigate]);
@@ -67,7 +78,12 @@ const Renew = () => {
     }, [location]);
 
     const handleNavigationToCheckout = (plan: any) => {
-        navigate('/checkout', {
+        let path = '/checkout';
+        if (plan.title.includes('1 Year')) path = '/renew/12m';
+        else if (plan.title.includes('6 Months')) path = '/renew/6m';
+        else if (plan.title.includes('3 Months')) path = '/renew/3m';
+
+        navigate(path, {
             state: { plan }
         });
     };

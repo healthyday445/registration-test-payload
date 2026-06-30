@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import indiaData from '../utils/india.json';
+import countriesData from '../utils/countries.json';
 
 interface StudentDetailsModalProps {
     isOpen: boolean;
@@ -12,9 +13,11 @@ interface StudentDetailsModalProps {
 }
 
 const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({ isOpen, paymentId, mobile, onClose, onSuccess }) => {
+    const isUSD = !mobile.startsWith('+91');
+
     const [formData, setFormData] = useState({
         name: '',
-        city: '',
+        city: isUSD ? 'International' : '',
         state: ''
     });
 
@@ -51,6 +54,14 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({ isOpen, payme
         setCities(stateCities);
     };
 
+    const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setFormData({
+            ...formData,
+            city: 'International',
+            state: e.target.value
+        });
+    };
+
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -58,10 +69,24 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({ isOpen, payme
         setLoading(true);
         setError('');
 
-        if (!formData.name || !formData.city || !formData.state) {
-            setError("All fields are required");
+        if (!formData.name) {
+            setError("Name is required");
             setLoading(false);
             return;
+        }
+
+        if (isUSD) {
+            if (!formData.state) {
+                setError("Country is required");
+                setLoading(false);
+                return;
+            }
+        } else {
+            if (!formData.city || !formData.state) {
+                setError("State and City are required");
+                setLoading(false);
+                return;
+            }
         }
 
         try {
@@ -101,8 +126,8 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({ isOpen, payme
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
-            <div className="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-sm overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300 font-sans">
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 h-[100dvh]">
+            <div className="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-sm overflow-y-auto max-h-[90dvh] relative shadow-2xl animate-in fade-in zoom-in duration-300 font-sans">
 
                 {/* Header */}
                 <div className="bg-[#004e8c] pt-8 pb-6 px-4 text-center relative">
@@ -131,47 +156,69 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({ isOpen, payme
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 placeholder:text-slate-400 focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-sm"
+                            className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 placeholder:text-slate-400 focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-[16px]"
                             placeholder="Name"
                             required
                         />
 
-                        <div className="relative">
-                            <select
-                                name="state"
-                                value={selectedStateCode}
-                                onChange={handleStateChange}
-                                className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 bg-white focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-sm appearance-none"
-                                required
-                            >
-                                <option value="" disabled>Select State</option>
-                                {states.map((state) => (
-                                    <option key={state.isoCode} value={state.isoCode}>{state.name}</option>
-                                ))}
-                            </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                        {isUSD ? (
+                            <div className="relative">
+                                <select
+                                    name="state"
+                                    value={formData.state}
+                                    onChange={handleCountryChange}
+                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 bg-white focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-[16px] appearance-none"
+                                    required
+                                >
+                                    <option value="" disabled>Select Country</option>
+                                    {countriesData.map((country) => (
+                                        <option key={country} value={country}>{country}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <>
+                                <div className="relative">
+                                    <select
+                                        name="state"
+                                        value={selectedStateCode}
+                                        onChange={handleStateChange}
+                                        className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 bg-white focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-[16px] appearance-none"
+                                        required
+                                    >
+                                        <option value="" disabled>Select State</option>
+                                        {states.map((state) => (
+                                            <option key={state.isoCode} value={state.isoCode}>{state.name}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                    </div>
+                                </div>
 
-                        <div className="relative">
-                            <select
-                                name="city"
-                                value={formData.city}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 bg-white focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-sm appearance-none disabled:bg-slate-100"
-                                required
-                                disabled={!selectedStateCode}
-                            >
-                                <option value="" disabled>Select City</option>
-                                {cities.map((city) => (
-                                    <option key={city.name} value={city.name}>{city.name}</option>
-                                ))}
-                            </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
-                            </div>
-                        </div>
+                                <div className="relative">
+                                    <select
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-3 rounded-lg border border-slate-300 text-slate-700 bg-white focus:border-[#ffb129] focus:ring-1 focus:ring-[#ffb129] outline-none transition-all text-sm appearance-none disabled:bg-slate-100"
+                                        required
+                                        disabled={!selectedStateCode}
+                                    >
+                                        <option value="" disabled>Select City</option>
+                                        {cities.map((city) => (
+                                            <option key={city.name} value={city.name}>{city.name}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                    </div>
+                                </div>
+                            </>
+                        )}
 
                         <button
                             type="submit"

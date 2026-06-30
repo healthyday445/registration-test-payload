@@ -2,8 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
-[functions]
-  directory = "netlify/functions"
+[dev]
+  command = "npm run dev"
+  targetPort = 8080
 
 [[redirects]]
   from = "/api/register"
@@ -21,3 +22,23 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[edge_functions]]
+  path = "/"
+  function = "geo-redirect"
+
+[[edge_functions]]
+  path = "/pricing"
+  function = "geo-redirect"
+
+[[edge_functions]]
+  path = "/renew"
+  function = "geo-redirect"
+
+[[edge_functions]]
+  path = "/renew/*"
+  function = "geo-redirect"
+
+[[edge_functions]]
+  path = "/upgrade"
+  function = "geo-redirect"

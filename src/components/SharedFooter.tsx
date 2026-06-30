@@ -23,6 +23,7 @@ const SharedFooter = () => {
                             <li><a className="hover:text-[#0D468B] transition-colors text-[16px] leading-[24px] font-normal text-slate-900" href="https://healthyday.co.in/privacy-policy/">Privacy Policy</a></li>
                             <li><a className="hover:text-[#0D468B] transition-colors text-[16px] leading-[24px] font-normal text-slate-900" href="https://healthyday.co.in/refund-policy/">Refund Policy</a></li>
                             <li><a className="hover:text-[#0D468B] transition-colors text-[16px] leading-[24px] font-normal text-slate-900" href="https://healthyday.co.in/terms-of-use/">Terms of Use</a></li>
+                            <li><a className="hover:text-[#0D468B] transition-colors text-[16px] leading-[24px] font-normal text-slate-900" href="https://yoga.healthyday.co.in/referral-tnc">Referral Contest Terms & Conditions</a></li>
                         </ul>
                     </div>
 

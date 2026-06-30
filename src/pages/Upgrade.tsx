@@ -3,15 +3,63 @@ import {
     Check,
     X,
 } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import SharedHeader from '../components/SharedHeader';
 import SharedFooter from '../components/SharedFooter';
 import SharedTestimonials from '../components/SharedTestimonials';
 
-const Home = () => {
+const plans = [
+    {
+        title: "3 to 6 months upgrade",
+        originalPrice: "1000",
+        discountPrice: "500",
+        discount: "Upgrade Offer!",
+        isBestValue: false,
+        buttonText: "UPGRADE NOW",
+        inrPlanName: "3_to_6_months_upgrade",
+        usdPlanName: "3_to_6_months_upgrade_usd"
+    },
+    {
+        title: "6 to 12 months upgrade",
+        originalPrice: "1000",
+        discountPrice: "500",
+        discount: "Upgrade Offer!",
+        isBestValue: true,
+        buttonText: "UPGRADE NOW",
+        inrPlanName: "6_to_12_months_upgrade",
+        usdPlanName: "6_to_12_months_upgrade_usd"
+    },
+    {
+        title: "3 to 12 months upgrade",
+        originalPrice: "2000",
+        discountPrice: "1000",
+        discount: "Upgrade Offer!",
+        isBestValue: false,
+        buttonText: "UPGRADE NOW",
+        inrPlanName: "3_to_12_months_upgrade",
+        usdPlanName: "3_to_12_months_upgrade_usd"
+    }
+];
+
+const Upgrade = () => {
     const [activePlan, setActivePlan] = useState(0);
     const navigate = useNavigate();
     const location = useLocation();
+    const { planType } = useParams();
+
+    useEffect(() => {
+        if (planType) {
+            const planParam = planType.toLowerCase();
+            let selectedPlan = null;
+            if (planParam.includes('1year')) selectedPlan = plans[0];
+            else if (planParam.includes('6month')) selectedPlan = plans[1];
+            else if (planParam.includes('3month')) selectedPlan = plans[2];
+
+            if (selectedPlan) {
+                navigate('/checkout', { state: { plan: selectedPlan }, replace: true });
+            }
+        }
+    }, [planType, navigate]);
 
     useEffect(() => {
         if (location.hash) {
@@ -25,48 +73,10 @@ const Home = () => {
     }, [location]);
 
     const handleNavigationToCheckout = (plan: any) => {
-        let path = '/checkout';
-        if (plan.title.includes('1 Year')) path = '/12m';
-        else if (plan.title.includes('6 Months')) path = '/6m';
-        else if (plan.title.includes('3 Months')) path = '/3m';
-
-        navigate(path, {
+        navigate('/checkout', {
             state: { plan }
         });
     };
-
-    const plans = [
-        {
-            title: "1 Year Including Diet",
-            originalPrice: "5999",
-            discountPrice: "2399",
-            discount: "Save 60%!",
-            isBestValue: true,
-            buttonText: "JOIN NOW",
-            inrPlanName: "12m_new_inr",
-            usdPlanName: "12m_new_usd"
-        },
-        {
-            title: "6 Months Plan",
-            originalPrice: "2999",
-            discountPrice: "1899",
-            discount: "Save 37%!",
-            isBestValue: false,
-            buttonText: "JOIN NOW",
-            inrPlanName: "6m_new_inr",
-            usdPlanName: "6m_new_usd"
-        },
-        {
-            title: "3 Months Plan",
-            originalPrice: "1499",
-            discountPrice: "1399",
-            discount: "Save 7%!",
-            isBestValue: false,
-            buttonText: "JOIN NOW",
-            inrPlanName: "3m_new_inr",
-            usdPlanName: "3m_new_usd"
-        }
-    ];
 
     const features = [
         { name: "Daily YOGA", plan1: true, plan2: true, plan3: true },
@@ -108,7 +118,7 @@ const Home = () => {
                                 <div className="flex items-baseline space-x-2 mb-4">
                                     <span className="text-[#919191] line-through text-[22px] leading-7">₹{plan.originalPrice}/-</span>
                                     <span
-                                        onClick={(e) => { e.stopPropagation(); navigate('/pricing'); }}
+                                        onClick={(e) => { e.stopPropagation(); navigate('/renew'); }}
                                         className="text-4xl font-semibold text-[#0D468B] cursor-pointer"
                                     >₹{plan.discountPrice}/-</span>
                                 </div>
@@ -147,9 +157,9 @@ const Home = () => {
                         ></div>
                         <div className="flex mb-4 px-2 md:px-4 text-center items-end py-4 relative z-[1]">
                             <div className="w-[30%] text-left font-bold text-[#919191] text-[11px] md:text-[16px]">Features</div>
-                            <div onClick={() => setActivePlan(0)} className={`w-[calc(70%/3)] cursor-pointer transform transition-all duration-300 font-semibold ${activePlan === 0 ? 'text-[13px] md:text-[26px] leading-[20px] md:leading-[24px] text-[#0D468B]' : 'text-[12px] md:text-[22px] leading-[20px] md:leading-[24px] text-[#202020]'}`}>1 Year</div>
-                            <div onClick={() => setActivePlan(1)} className={`w-[calc(70%/3)] cursor-pointer transform transition-all duration-300 font-semibold ${activePlan === 1 ? 'text-[13px] md:text-[26px] leading-[20px] md:leading-[24px] text-[#0D468B]' : 'text-[12px] md:text-[22px] leading-[20px] md:leading-[24px] text-[#202020]'}`}>6 Months</div>
-                            <div onClick={() => setActivePlan(2)} className={`w-[calc(70%/3)] cursor-pointer transform transition-all duration-300 font-semibold ${activePlan === 2 ? 'text-[13px] md:text-[26px] leading-[20px] md:leading-[24px] text-[#0D468B]' : 'text-[12px] md:text-[22px] leading-[20px] md:leading-[24px] text-[#202020]'}`}>3 Months</div>
+                            <div onClick={() => setActivePlan(0)} className={`w-[calc(70%/3)] cursor-pointer transform transition-all duration-300 font-semibold ${activePlan === 0 ? 'text-[11px] md:text-[22px] leading-[18px] md:leading-[24px] text-[#0D468B]' : 'text-[10px] md:text-[18px] leading-[18px] md:leading-[24px] text-[#202020]'}`}>3 to 6 months</div>
+                            <div onClick={() => setActivePlan(1)} className={`w-[calc(70%/3)] cursor-pointer transform transition-all duration-300 font-semibold ${activePlan === 1 ? 'text-[11px] md:text-[22px] leading-[18px] md:leading-[24px] text-[#0D468B]' : 'text-[10px] md:text-[18px] leading-[18px] md:leading-[24px] text-[#202020]'}`}>6 to 12 months</div>
+                            <div onClick={() => setActivePlan(2)} className={`w-[calc(70%/3)] cursor-pointer transform transition-all duration-300 font-semibold ${activePlan === 2 ? 'text-[11px] md:text-[22px] leading-[18px] md:leading-[24px] text-[#0D468B]' : 'text-[10px] md:text-[18px] leading-[18px] md:leading-[24px] text-[#202020]'}`}>3 to 12 months</div>
                         </div>
 
                         <div className="">
@@ -185,4 +195,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Upgrade;

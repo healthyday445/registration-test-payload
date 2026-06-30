@@ -7,7 +7,8 @@ export type ApiStatus =
     | 'free_completed_recent'
     | 'paid_user'
     | 'subscription_expired_recently'
-    | 'self_referral';
+    | 'self_referral'
+    | 'isReferral';
 
 export type PopupVariant = 'free' | '21days';
 

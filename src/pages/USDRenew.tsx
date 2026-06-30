@@ -8,7 +8,7 @@ import SharedHeader from '../components/SharedHeader';
 import SharedFooter from '../components/SharedFooter';
 import SharedTestimonials from '../components/SharedTestimonials';
 
-const Home = () => {
+const USDRenew = () => {
     const [activePlan, setActivePlan] = useState(0);
     const navigate = useNavigate();
     const location = useLocation();
@@ -26,12 +26,12 @@ const Home = () => {
 
     const handleNavigationToCheckout = (plan: any) => {
         let path = '/checkout';
-        if (plan.title.includes('1 Year')) path = '/12m';
-        else if (plan.title.includes('6 Months')) path = '/6m';
-        else if (plan.title.includes('3 Months')) path = '/3m';
+        if (plan.title.includes('1 Year')) path = '/renew/12m_usd';
+        else if (plan.title.includes('6 Months')) path = '/renew/6m_usd';
+        else if (plan.title.includes('3 Months')) path = '/renew/3m_usd';
 
         navigate(path, {
-            state: { plan }
+            state: { plan, isUSDFlow: true }
         });
     };
 
@@ -39,32 +39,38 @@ const Home = () => {
         {
             title: "1 Year Including Diet",
             originalPrice: "5999",
-            discountPrice: "2399",
-            discount: "Save 60%!",
+            discountPrice: "1999",
+            usdOriginalPrice: "149",
+            usdPrice: "49",
+            discount: "Save 66%!",
             isBestValue: true,
-            buttonText: "JOIN NOW",
-            inrPlanName: "12m_new_inr",
-            usdPlanName: "12m_new_usd"
+            buttonText: "RENEW NOW",
+            inrPlanName: "12m_renew_inr",
+            usdPlanName: "12m_renew_usd"
         },
         {
             title: "6 Months Plan",
             originalPrice: "2999",
-            discountPrice: "1899",
-            discount: "Save 37%!",
+            discountPrice: "1499",
+            usdOriginalPrice: "79",
+            usdPrice: "39",
+            discount: "Save 50%!",
             isBestValue: false,
-            buttonText: "JOIN NOW",
-            inrPlanName: "6m_new_inr",
-            usdPlanName: "6m_new_usd"
+            buttonText: "RENEW NOW",
+            inrPlanName: "6m_renew_inr",
+            usdPlanName: "6m_renew_usd"
         },
         {
             title: "3 Months Plan",
             originalPrice: "1499",
-            discountPrice: "1399",
-            discount: "Save 7%!",
+            discountPrice: "999",
+            usdOriginalPrice: "39",
+            usdPrice: "29",
+            discount: "Save 33%!",
             isBestValue: false,
-            buttonText: "JOIN NOW",
-            inrPlanName: "3m_new_inr",
-            usdPlanName: "3m_new_usd"
+            buttonText: "RENEW NOW",
+            inrPlanName: "3m_renew_inr",
+            usdPlanName: "3m_renew_usd"
         }
     ];
 
@@ -106,11 +112,11 @@ const Home = () => {
                             <div className="p-4 md:p-6 text-left">
                                 <h2 className="text-[25px] leading-7 font-semibold text-[#0D468B] mb-2">{plan.title}</h2>
                                 <div className="flex items-baseline space-x-2 mb-4">
-                                    <span className="text-[#919191] line-through text-[22px] leading-7">₹{plan.originalPrice}/-</span>
+                                    <span className="text-[#919191] line-through text-[22px] leading-7">${plan.usdOriginalPrice}</span>
                                     <span
-                                        onClick={(e) => { e.stopPropagation(); navigate('/pricing'); }}
+                                        onClick={(e) => { e.stopPropagation(); navigate('/usd-pricing'); }}
                                         className="text-4xl font-semibold text-[#0D468B] cursor-pointer"
-                                    >₹{plan.discountPrice}/-</span>
+                                    >${plan.usdPrice}</span>
                                 </div>
                                 <div className="mb-6">
                                     <span className="bg-[#FF0000] text-white text-xs font-bold px-3 py-1 rounded-full">
@@ -185,4 +191,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default USDRenew;

@@ -9,6 +9,11 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const PlanCheckout = lazy(() => import('./pages/PlanCheckout'));
 const Renew = lazy(() => import('./pages/Renew'));
 const ReferralContestRegistration = lazy(() => import('./pages/referral-contest-registration'));
+const ReferralTnc = lazy(() => import('./pages/ReferralTnc'));
+const USDPricing = lazy(() => import('./pages/USDPricing'));
+const USDRenew = lazy(() => import('./pages/USDRenew'));
+const Upgrade = lazy(() => import('./pages/Upgrade'));
+const USDUpgrade = lazy(() => import('./pages/USDUpgrade'));
 
 const JoinRedirect = () => {
   useEffect(() => {
@@ -54,11 +59,31 @@ const App = () => {
           <Route path="/telugu" element={<FreeProgrammes defaultLanguage="Telugu" />} />
           <Route path="/talagu" element={<FreeProgrammes defaultLanguage="Telugu" />} />
           <Route path="/pricing" element={<Home />} />
+          <Route path="/usd-pricing" element={<USDPricing />} />
+          <Route path="/usd-renew" element={<USDRenew />} />
           <Route path="/renew" element={<Renew />} />
           <Route path="/renew/:planType" element={<Renew />} />
-          <Route path="/thank-you" element={<ThankYou />} />
+          <Route path="/upgrade" element={<Upgrade />} />
+          <Route path="/usd_upgrade" element={<USDUpgrade />} />
+
+          {/* Checkout Routes */}
           <Route path="/checkout" element={<PlanCheckout />} />
           <Route path="/:planId/checkout" element={<PlanCheckout />} />
+          
+          <Route path="/12m" element={<PlanCheckout />} />
+          <Route path="/6m" element={<PlanCheckout />} />
+          <Route path="/3m" element={<PlanCheckout />} />
+          <Route path="/12m_usd" element={<PlanCheckout />} />
+          <Route path="/6m_usd" element={<PlanCheckout />} />
+          <Route path="/3m_usd" element={<PlanCheckout />} />
+          <Route path="/renew/12m" element={<PlanCheckout />} />
+          <Route path="/renew/6m" element={<PlanCheckout />} />
+          <Route path="/renew/3m" element={<PlanCheckout />} />
+          <Route path="/renew/12m_usd" element={<PlanCheckout />} />
+          <Route path="/renew/6m_usd" element={<PlanCheckout />} />
+          <Route path="/renew/3m_usd" element={<PlanCheckout />} />
+
+          <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/:planId/checkout/old" element={<PlanCheckout />} />
           <Route path="/free-programmes" element={<FreeProgrammes />} />
           <Route path="/FreeProgrammes" element={<FreeProgrammes />} />
@@ -75,6 +100,7 @@ const App = () => {
           <Route path="/21-day/telugu" element={<TwentyOneDays defaultLanguage="Telugu" />} />
           <Route path="/21-day/telagu" element={<TwentyOneDays defaultLanguage="Telugu" />} />
           <Route path="/500yogakits" element={<ReferralContestRegistration />} />
+          <Route path="/referral-tnc" element={<ReferralTnc />} />
           <Route path="/join" element={<JoinRedirect />} />
           <Route path="/ofl/*" element={<OflRedirect />} />
           <Route path="*" element={<NotFound />} />

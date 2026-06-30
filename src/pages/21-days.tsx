@@ -25,6 +25,7 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
     const [phoneError, setPhoneError] = useState(false);
     const [popupStatus, setPopupStatus] = useState<string | null>(null);
     const [heroLoaded, setHeroLoaded] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Referral fraud guard: if this ?ref= has been used 5+ times, strip it and redirect
     useEffect(() => {
@@ -51,6 +52,8 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (isSubmitting) return;
 
         pushDataLayer({ 'event': 'form_submit_attempt', 'page_name': '21_days' });
 
@@ -87,6 +90,7 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
             return;
         }
 
+        setIsSubmitting(true);
         try {
             const searchParams = new URLSearchParams(window.location.search);
             const source = searchParams.get('source') || searchParams.get('ref') || 'website_organic';
@@ -120,7 +124,6 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
                 ip_address
             };
 
-            console.log("Registration API Payload:", payload);
             const response = await fetch('/api/register', {
                 method: 'POST',
                 headers: {
@@ -172,7 +175,12 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
 
                 // Track this referral usage in localStorage
                 recordReferralUse();
-                setPopupStatus(resolvedStatus);
+
+                if (data.is_referral === true && data.status === 'new_registration') {
+                    setPopupStatus('isReferral');
+                } else {
+                    setPopupStatus(resolvedStatus);
+                }
             } else {
                 pushDataLayer({ 'event': 'registration_api_error', 'page_name': '21_days', 'http_status': response.status });
                 console.error('Registration failed');
@@ -182,6 +190,8 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
             pushDataLayer({ 'event': 'registration_network_error', 'page_name': '21_days' });
             console.error('Error submitting form:', error);
             alert(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -272,8 +282,22 @@ const TwentyOneDays = ({ defaultLanguage = '' }: FreeProgrammesProps) => {
                                         <span className="text-red-500 text-[12px] font-medium pl-1">⚠ Please select a class language to continue.</span>
                                     )}
                                 </div>
-                                <button type="submit" className="w-full h-[56px] bg-[#feab27] border-[2px] border-transparent hover:bg-white hover:border-[#feab27] transition-colors rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transform active:scale-95 duration-200 group">
-                                    <span className="font-bold text-[18px] text-[#202020] uppercase tracking-wide group-hover:text-[#202020]">Register For Free</span>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={`w-full h-[56px] border-[2px] transition-colors rounded-full flex items-center justify-center shadow-lg duration-200 group ${isSubmitting ? 'bg-[#feab27]/60 border-transparent cursor-not-allowed' : 'bg-[#feab27] border-transparent hover:bg-white hover:border-[#feab27] cursor-pointer hover:shadow-xl transform active:scale-95'}`}
+                                >
+                                    {isSubmitting ? (
+                                        <span className="font-bold text-[18px] text-[#202020] uppercase tracking-wide flex items-center gap-2">
+                                            <svg className="animate-spin w-5 h-5 text-[#202020]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+                                            </svg>
+                                            Registering...
+                                        </span>
+                                    ) : (
+                                        <span className="font-bold text-[18px] text-[#202020] uppercase tracking-wide group-hover:text-[#202020]">Register For Free</span>
+                                    )}
                                 </button>
                                 <span className="font-semibold text-[16px] text-center text-[#0d468b]">6,04,017+ members participated</span>
                             </form>

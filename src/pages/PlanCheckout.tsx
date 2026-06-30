@@ -35,8 +35,12 @@ const defaultPlan = {
     duration: "6 Months Plan",
     originalPrice: "2999",
     discountPrice: "1899",
-    discount: "Save 37%!",
+    usdPrice: "39",
+    usdOriginalPrice: "79",
+    discount: "Save 50%!",
     isBestValue: true,
+    inrPlanName: "6m_new_inr",
+    usdPlanName: "6m_new_usd"
 };
 
 const oldPlans: Record<string, any> = {
@@ -45,24 +49,36 @@ const oldPlans: Record<string, any> = {
         duration: "1 Year Including Diet",
         originalPrice: "5999",
         discountPrice: "1999",
+        usdPrice: "49",
+        usdOriginalPrice: "149",
         discount: "Save 66%!",
         isBestValue: true,
+        inrPlanName: "12m_renew_inr",
+        usdPlanName: "12m_renew_usd"
     },
     '6months': {
         title: "6 Months Plan",
         duration: "6 Months Plan",
         originalPrice: "2999",
         discountPrice: "1499",
+        usdPrice: "39",
+        usdOriginalPrice: "79",
         discount: "Save 50%!",
         isBestValue: false,
+        inrPlanName: "6m_renew_inr",
+        usdPlanName: "6m_renew_usd"
     },
     '3months': {
         title: "3 Months Plan",
         duration: "3 Months Plan",
         originalPrice: "1499",
         discountPrice: "999",
+        usdPrice: "29",
+        usdOriginalPrice: "39",
         discount: "Save 33%!",
         isBestValue: false,
+        inrPlanName: "3m_renew_inr",
+        usdPlanName: "3m_renew_usd"
     }
 };
 
@@ -70,22 +86,84 @@ const PlanCheckout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { planId } = useParams();
+    const isUSDFlow = location.state?.isUSDFlow !== undefined ? location.state.isUSDFlow : location.pathname.includes('_usd');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [dialCode, setDialCode] = useState('+91');
+    const [dialCode, setDialCode] = useState(isUSDFlow ? '+1' : '+91');
     const [language, setLanguage] = useState('Telugu');
     const [phoneError, setPhoneError] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [paymentId, setPaymentId] = useState('');
 
-    let plan = location.state?.plan;
+    let plan = location.state?.plan ? { ...location.state.plan } : null;
 
-    if (!plan && location.pathname.includes('/checkout/old') && planId) {
-        if (planId === '1year') plan = oldPlans['1year'];
-        else if (planId === '6months') plan = oldPlans['6months'];
-        else if (planId === '3months') plan = oldPlans['3months'];
+    if (!plan) {
+        if (location.pathname.includes('/checkout/old') && planId) {
+            if (planId === '1year') plan = { ...oldPlans['1year'] };
+            else if (planId === '6months') plan = { ...oldPlans['6months'] };
+            else if (planId === '3months') plan = { ...oldPlans['3months'] };
+        } else if (location.pathname.includes('12m')) {
+            const isRenew = location.pathname.includes('/renew');
+            plan = {
+                title: "1 Year Including Diet",
+                duration: "1 Year Including Diet",
+                originalPrice: "5999",
+                discountPrice: isRenew ? "1999" : "2399",
+                usdOriginalPrice: "149",
+                usdPrice: "49",
+                discount: isUSDFlow ? "Save 66%!" : (isRenew ? "Save 66%!" : "Save 60%!"),
+                isBestValue: true,
+                inrPlanName: isRenew ? "12m_renew_inr" : "12m_new_inr",
+                usdPlanName: isRenew ? "12m_renew_usd" : "12m_new_usd"
+            };
+        } else if (location.pathname.includes('6m')) {
+            const isRenew = location.pathname.includes('/renew');
+            plan = {
+                title: "6 Months Plan",
+                duration: "6 Months Plan",
+                originalPrice: "2999",
+                discountPrice: isRenew ? "1499" : "1899",
+                usdOriginalPrice: "79",
+                usdPrice: "39",
+                discount: isUSDFlow ? "Save 50%!" : (isRenew ? "Save 50%!" : "Save 37%!"),
+                isBestValue: false,
+                inrPlanName: isRenew ? "6m_renew_inr" : "6m_new_inr",
+                usdPlanName: isRenew ? "6m_renew_usd" : "6m_new_usd"
+            };
+        } else if (location.pathname.includes('3m')) {
+            const isRenew = location.pathname.includes('/renew');
+            plan = {
+                title: "3 Months Plan",
+                duration: "3 Months Plan",
+                originalPrice: "1499",
+                discountPrice: isRenew ? "999" : "1399",
+                usdOriginalPrice: "39",
+                usdPrice: "29",
+                discount: isUSDFlow ? "Save 33%!" : (isRenew ? "Save 33%!" : "Save 7%!"),
+                isBestValue: false,
+                inrPlanName: isRenew ? "3m_renew_inr" : "3m_new_inr",
+                usdPlanName: isRenew ? "3m_renew_usd" : "3m_new_usd"
+            };
+        }
     }
 
-    if (!plan) plan = defaultPlan;
+    if (!plan) plan = { ...defaultPlan };
+
+    // Inject USD prices if missing
+    if (!plan.usdPrice) {
+        if (plan.title?.includes('1 Year') || plan.title?.includes('12 Month') || plan.duration?.includes('1 Year')) {
+            plan.usdPrice = "49";
+            plan.usdOriginalPrice = "149";
+        } else if (plan.title?.includes('6 Month') || plan.duration?.includes('6 Month')) {
+            plan.usdPrice = "39";
+            plan.usdOriginalPrice = "79";
+        } else if (plan.title?.includes('3 Month') || plan.duration?.includes('3 Month')) {
+            plan.usdPrice = "29";
+            plan.usdOriginalPrice = "39";
+        } else {
+            plan.usdPrice = "39";
+            plan.usdOriginalPrice = "79";
+        }
+    }
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -99,7 +177,7 @@ const PlanCheckout = () => {
         }
     }, []);
 
-    const handleCheckout = (e: React.FormEvent) => {
+    const handleCheckout = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validatePhone(phoneNumber, dialCode)) {
             setPhoneError(true);
@@ -122,32 +200,68 @@ const PlanCheckout = () => {
         const fullContact = `${dialCode}${phoneNumber}`;
         console.log('Razorpay prefill contact:', fullContact, '| dialCode:', dialCode, '| phoneNumber:', phoneNumber);
 
-        const options = {
-            key: razorpayKey,
-            amount: Number(plan.discountPrice) * 100,
-            currency: "INR",
-            name: "Healthyday",
-            description: `${plan.title} Subscription`,
-            image: "/logo.webp",
-            handler: function (response: any) {
-                setPaymentId(response.razorpay_payment_id);
-                setShowModal(true);
-            },
-            prefill: {
-                name: "",
-                email: "",
-                contact: fullContact
-            },
-            notes: {
-                class_language: language,
-                plan: plan.title
-            },
-            theme: {
-                color: "#004e8c"
-            }
-        };
+        const isUSD = dialCode !== '+91';
+        const finalPrice = isUSD && plan.usdPrice ? plan.usdPrice : plan.discountPrice;
+        const currency = isUSD ? "USD" : "INR";
+
+        let planNameId = '';
+        if (isUSD) {
+            planNameId = plan.usdPlanName || (plan.title?.includes('1 Year') || plan.title?.includes('12 Month') || plan.duration?.includes('1 Year') ? '12m_new_usd' : plan.title?.includes('6 Month') || plan.duration?.includes('6 Month') ? '6m_new_usd' : plan.title?.includes('3 Month') || plan.duration?.includes('3 Month') ? '3m_new_usd' : plan.title);
+        } else {
+            planNameId = plan.inrPlanName || plan.planName || plan.title;
+        }
 
         try {
+            const amountInPaisa = Number(finalPrice) * 100;
+
+            // 1. Create Order from Backend to enable auto-capture
+            const orderResponse = await fetch('/.netlify/functions/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: amountInPaisa,
+                    currency: currency,
+                    notes: {
+                        language: language,
+                        plan_name: planNameId
+                    }
+                })
+            });
+            const orderData = await orderResponse.json();
+
+            if (!orderResponse.ok) {
+                alert(`Error creating Razorpay order: ${orderData.error || 'Unknown error'}. Check console for details.`);
+                console.error("Create Order Error Details:", orderData);
+                return;
+            }
+
+            // 2. Open Razorpay Checkout with the generated order_id
+            const options = {
+                key: razorpayKey,
+                amount: amountInPaisa,
+                currency: currency,
+                order_id: orderData.id, // Passed from backend order creation
+                name: "Healthyday",
+                description: `${plan.title} Subscription`,
+                image: "/logo.webp",
+                handler: function (response: any) {
+                    setPaymentId(response.razorpay_payment_id);
+                    setShowModal(true);
+                },
+                prefill: {
+                    name: "",
+                    email: "",
+                    contact: fullContact
+                },
+                notes: {
+                    language: language,
+                    plan_name: planNameId
+                },
+                theme: {
+                    color: "#004e8c"
+                }
+            };
+
             const rzp1 = new window.Razorpay(options);
             rzp1.open();
         } catch (error) {
@@ -242,8 +356,12 @@ const PlanCheckout = () => {
                                 <div className="p-6">
                                     <h3 className="text-[20px] font-bold text-[#0D468B] mb-2">{plan.title}</h3>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <span className="text-[#919191] line-through text-[18px] font-medium decoration-2">₹{plan.originalPrice}/-</span>
-                                        <span className="text-[32px] font-bold text-[#0D468B]">₹{plan.discountPrice}/-</span>
+                                        <span className="text-[#919191] line-through text-[18px] font-medium decoration-2">
+                                            {dialCode !== '+91' && plan.usdOriginalPrice ? `$${plan.usdOriginalPrice}` : `₹${plan.originalPrice}/-`}
+                                        </span>
+                                        <span className="text-[32px] font-bold text-[#0D468B]">
+                                            {dialCode !== '+91' && plan.usdPrice ? `$${plan.usdPrice}` : `₹${plan.discountPrice}/-`}
+                                        </span>
                                     </div>
                                     <div className="inline-block bg-[#ff0000] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">
                                         {plan.discount}
@@ -267,10 +385,15 @@ const PlanCheckout = () => {
                                             }}
                                             placeholder="Enter Your Whatsapp Number"
                                             required
-                                            defaultCountry="in"
+                                            defaultCountry={isUSDFlow ? "us" : "in"}
                                         />
                                         {phoneError && (
                                             <span className="text-red-500 text-[12px] font-medium mt-1 block">⚠ Please enter a valid mobile number.</span>
+                                        )}
+                                        {!isUSDFlow && dialCode !== '+91' && !phoneError && (
+                                            <span className="text-[#0D468B] text-[13px] font-semibold mt-1.5 block">
+                                                ⚠ Pricing changed to international
+                                            </span>
                                         )}
                                     </div>
 
