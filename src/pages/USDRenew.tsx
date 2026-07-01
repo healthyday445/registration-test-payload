@@ -3,14 +3,13 @@ import {
     Check,
     X,
 } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import SharedHeader from '../components/SharedHeader';
 import SharedFooter from '../components/SharedFooter';
 import SharedTestimonials from '../components/SharedTestimonials';
 
 const USDRenew = () => {
     const [activePlan, setActivePlan] = useState(0);
-    const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
@@ -25,14 +24,12 @@ const USDRenew = () => {
     }, [location]);
 
     const handleNavigationToCheckout = (plan: any) => {
-        let path = '/checkout';
-        if (plan.title.includes('1 Year')) path = '/renew/12m_usd';
-        else if (plan.title.includes('6 Months')) path = '/renew/6m_usd';
-        else if (plan.title.includes('3 Months')) path = '/renew/3m_usd';
+        let url = 'https://yoga.healthyday.co.in/renew/12m_usd';
+        if (plan.title.includes('1 Year')) url = 'https://yoga.healthyday.co.in/renew/12m_usd';
+        else if (plan.title.includes('6 Months')) url = 'https://yoga.healthyday.co.in/renew/6m_usd';
+        else if (plan.title.includes('3 Months')) url = 'https://yoga.healthyday.co.in/renew/3m_usd';
 
-        navigate(path, {
-            state: { plan, isUSDFlow: true }
-        });
+        window.location.href = url;
     };
 
     const plans = [
@@ -114,7 +111,7 @@ const USDRenew = () => {
                                 <div className="flex items-baseline space-x-2 mb-4">
                                     <span className="text-[#919191] line-through text-[22px] leading-7">${plan.usdOriginalPrice}</span>
                                     <span
-                                        onClick={(e) => { e.stopPropagation(); navigate('/usd-pricing'); }}
+                                        onClick={(e) => { e.stopPropagation(); handleNavigationToCheckout(plan); }}
                                         className="text-4xl font-semibold text-[#0D468B] cursor-pointer"
                                     >${plan.usdPrice}</span>
                                 </div>

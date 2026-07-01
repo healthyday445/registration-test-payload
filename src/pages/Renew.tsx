@@ -3,7 +3,7 @@ import {
     Check,
     X,
 } from 'lucide-react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import SharedHeader from '../components/SharedHeader';
 import SharedFooter from '../components/SharedFooter';
 import SharedTestimonials from '../components/SharedTestimonials';
@@ -43,7 +43,6 @@ const plans = [
 
 const Renew = () => {
     const [activePlan, setActivePlan] = useState(0);
-    const navigate = useNavigate();
     const location = useLocation();
     const { planType } = useParams();
 
@@ -56,15 +55,15 @@ const Renew = () => {
             else if (planParam.includes('3month')) selectedPlan = plans[2];
 
             if (selectedPlan) {
-                let path = '/checkout';
-                if (selectedPlan.title.includes('1 Year')) path = '/renew/12m';
-                else if (selectedPlan.title.includes('6 Months')) path = '/renew/6m';
-                else if (selectedPlan.title.includes('3 Months')) path = '/renew/3m';
+                let url = 'https://yoga.healthyday.co.in/renew/12m';
+                if (selectedPlan.title.includes('1 Year')) url = 'https://yoga.healthyday.co.in/renew/12m';
+                else if (selectedPlan.title.includes('6 Months')) url = 'https://yoga.healthyday.co.in/renew/6m';
+                else if (selectedPlan.title.includes('3 Months')) url = 'https://yoga.healthyday.co.in/renew/3m';
 
-                navigate(path, { state: { plan: selectedPlan }, replace: true });
+                window.location.href = url;
             }
         }
-    }, [planType, navigate]);
+    }, [planType]);
 
     useEffect(() => {
         if (location.hash) {
@@ -78,14 +77,12 @@ const Renew = () => {
     }, [location]);
 
     const handleNavigationToCheckout = (plan: any) => {
-        let path = '/checkout';
-        if (plan.title.includes('1 Year')) path = '/renew/12m';
-        else if (plan.title.includes('6 Months')) path = '/renew/6m';
-        else if (plan.title.includes('3 Months')) path = '/renew/3m';
+        let url = 'https://yoga.healthyday.co.in/renew/12m';
+        if (plan.title.includes('1 Year')) url = 'https://yoga.healthyday.co.in/renew/12m';
+        else if (plan.title.includes('6 Months')) url = 'https://yoga.healthyday.co.in/renew/6m';
+        else if (plan.title.includes('3 Months')) url = 'https://yoga.healthyday.co.in/renew/3m';
 
-        navigate(path, {
-            state: { plan }
-        });
+        window.location.href = url;
     };
 
     const features = [
@@ -128,7 +125,7 @@ const Renew = () => {
                                 <div className="flex items-baseline space-x-2 mb-4">
                                     <span className="text-[#919191] line-through text-[22px] leading-7">₹{plan.originalPrice}/-</span>
                                     <span
-                                        onClick={(e) => { e.stopPropagation(); navigate('/renew'); }}
+                                        onClick={(e) => { e.stopPropagation(); handleNavigationToCheckout(plan); }}
                                         className="text-4xl font-semibold text-[#0D468B] cursor-pointer"
                                     >₹{plan.discountPrice}/-</span>
                                 </div>
