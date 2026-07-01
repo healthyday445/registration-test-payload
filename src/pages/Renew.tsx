@@ -17,7 +17,8 @@ const plans = [
         isBestValue: true,
         buttonText: "RENEW NOW",
         inrPlanName: "12m_renew_inr",
-        usdPlanName: "12m_renew_usd"
+        usdPlanName: "12m_renew_usd",
+        url: "https://pages.razorpay.com/pl_SpYN1M7JnswQpG/view"
     },
     {
         title: "6 Months Plan",
@@ -27,7 +28,8 @@ const plans = [
         isBestValue: false,
         buttonText: "RENEW NOW",
         inrPlanName: "6m_renew_inr",
-        usdPlanName: "6m_renew_usd"
+        usdPlanName: "6m_renew_usd",
+        url: "https://pages.razorpay.com/pl_SpYTsE5hXFw3dO/view"
     },
     {
         title: "3 Months Plan",
@@ -37,7 +39,8 @@ const plans = [
         isBestValue: false,
         buttonText: "RENEW NOW",
         inrPlanName: "3m_renew_inr",
-        usdPlanName: "3m_renew_usd"
+        usdPlanName: "3m_renew_usd",
+        url: "https://pages.razorpay.com/pl_SpYVQKVNtWdY7a/view"
     }
 ];
 
@@ -55,10 +58,10 @@ const Renew = () => {
             else if (planParam.includes('3month')) selectedPlan = plans[2];
 
             if (selectedPlan) {
-                let url = 'https://yoga.healthyday.co.in/renew/12m';
-                if (selectedPlan.title.includes('1 Year')) url = 'https://yoga.healthyday.co.in/renew/12m';
-                else if (selectedPlan.title.includes('6 Months')) url = 'https://yoga.healthyday.co.in/renew/6m';
-                else if (selectedPlan.title.includes('3 Months')) url = 'https://yoga.healthyday.co.in/renew/3m';
+                let url = selectedPlan.url || 'https://pages.razorpay.com/pl_SpYN1M7JnswQpG/view';
+                if (selectedPlan.title.includes('1 Year')) url = 'https://pages.razorpay.com/pl_SpYN1M7JnswQpG/view';
+                else if (selectedPlan.title.includes('6 Months')) url = 'https://pages.razorpay.com/pl_SpYTsE5hXFw3dO/view';
+                else if (selectedPlan.title.includes('3 Months')) url = 'https://pages.razorpay.com/pl_SpYVQKVNtWdY7a/view';
 
                 window.location.href = url;
             }
@@ -77,10 +80,10 @@ const Renew = () => {
     }, [location]);
 
     const handleNavigationToCheckout = (plan: any) => {
-        let url = 'https://yoga.healthyday.co.in/renew/12m';
-        if (plan.title.includes('1 Year')) url = 'https://yoga.healthyday.co.in/renew/12m';
-        else if (plan.title.includes('6 Months')) url = 'https://yoga.healthyday.co.in/renew/6m';
-        else if (plan.title.includes('3 Months')) url = 'https://yoga.healthyday.co.in/renew/3m';
+        let url = plan.url || 'https://pages.razorpay.com/pl_SpYN1M7JnswQpG/view';
+        if (plan.title.includes('1 Year')) url = 'https://pages.razorpay.com/pl_SpYN1M7JnswQpG/view';
+        else if (plan.title.includes('6 Months')) url = 'https://pages.razorpay.com/pl_SpYTsE5hXFw3dO/view';
+        else if (plan.title.includes('3 Months')) url = 'https://pages.razorpay.com/pl_SpYVQKVNtWdY7a/view';
 
         window.location.href = url;
     };
